@@ -12,15 +12,20 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-app.use(express.static(path.join(__dirname, 'public')));
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 // Serve static frontend files from 'public' folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Your OpenAI key from .env
+// Serve index.html on root path
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// OpenAI API key from environment
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 // Chat route
@@ -55,5 +60,6 @@ app.post('/chat', async (req, res) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
+
